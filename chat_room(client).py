@@ -6,6 +6,7 @@ Olga Rodríguez Acevedo
 Claudia Casado Poyatos
 Natalia García Domínguez
 """
+
 from multiprocessing.connection import Client, Listener
 from time import sleep
 from multiprocessing import Process
@@ -21,7 +22,7 @@ def client_listener(info, conexion, fn):
         conn = cl.accept()
         print(".......................conexión aceptada por", cl.last_accepted)
         m = conn.recv()
-        print(".......................mensaje recobido", m)
+        print(".......................mensaje recibido", m)
         if m[1] == 'Alguien quiere hablar contigo':
             print(m[1])
             conexion.send(("info del usuario que quiere hablar conmigo", m[0], 0))
@@ -108,4 +109,22 @@ def client_client2(conn, fn): # Esta es para la persona con quien quieren hablar
 # Esto sería una vez que se ha acabado la conexión entre los dos que están hablando para volver al servidor
 
 def client_client(info, user_info, fn): # El que pide hablar con alguien hace de broker falso
-    print()
+    print(".......................Openning connection between two clients")
+    # info es la información de uno mismo (diccionario)
+    # user_info son los datos de la persona con la que quieres hablar (lista)
+    
+    with Listener(address = (info['address'], info['port']), authkey = info['authkey']) as listener:
+        print("listener starting")
+        
+        while True:
+            print("accepting connexions")
+            try:
+                conn = listener.accept()
+                print("connection accepted from", user_info[0])
+                
+                p = Process(target = client_client2, args = (conn, fn, ))
+                p.start()
+            except Exception as e:
+                traceback.print_exc()
+                
+        print("end server")
