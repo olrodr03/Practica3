@@ -15,7 +15,7 @@ import traceback
 
 def client_listener(info, conexion, fn):
     print("Openning listener at {info}")
-    cl = Listener(address=(info['address'], info['port']), authkey=info['authkey'])
+    cl = Listener(address = (info['address'], info['port']), authkey = info['authkey'])
     print(".......................client listener comenzando")
     print(".......................aceptando conexiones")
     while True:
@@ -31,7 +31,7 @@ def client_listener(info, conexion, fn):
 def nueva_conexion(info_client, fn):
     print("Intentando conectar")
     sys.stadin = os.fdopen(fn)
-    with Client(address=(info_client['address'], info_client['port']), authkey=info_client['authkey']) as conn:
+    with Client(address = (info_client['address'], info_client['port']), authkey = info_client['authkey']) as conn:
         
         sleep(1)
         print(".......................aceptando conexiones")
@@ -66,7 +66,7 @@ def nueva_conexion(info_client, fn):
                 print("Has recibido el fichero:", nombre_fichero)
         print("Conexión cerrada")
         conn.close()
-    print(".......................Conexión terminada entre los dos clients")
+    print(".......................Terminando conexión entre los dos clients")
 
 def client_client2(conn, fn): # Esta es para la persona con quien quieren hablar
     sys.stdin = os.fdopen(fn)
@@ -101,26 +101,26 @@ def client_client2(conn, fn): # Esta es para la persona con quien quieren hablar
             else:
                 conn.send(msg_a_enviar)
         except EOFError:
-            print("connection abruptly closed by client")
+            print("conexión cerrada de manera abrupta por client")
             connected = False
-    print("Connection closed")
+    print("Conexión cerrada")
     conn.close()
-    print(".......................Ending connection between two clients")
+    print(".......................Terminando conexión entre los dos clients")
 # Esto sería una vez que se ha acabado la conexión entre los dos que están hablando para volver al servidor
 
 def client_client(info, user_info, fn): # El que pide hablar con alguien hace de broker falso
-    print(".......................Openning connection between two clients")
+    print(".......................Iniciando conexión entre dos clients")
     # info es la información de uno mismo (diccionario)
     # user_info son los datos de la persona con la que quieres hablar (lista)
     
     with Listener(address = (info['address'], info['port']), authkey = info['authkey']) as listener:
-        print("listener starting")
+        print("listener comenzando")
         
         while True:
-            print("accepting connexions")
+            print("aceptando conexiones")
             try:
                 conn = listener.accept()
-                print("connection accepted from", user_info[0])
+                print("conexión aceptada por", user_info[0])
                 
                 p = Process(target = client_client2, args = (conn, fn, ))
                 p.start()
