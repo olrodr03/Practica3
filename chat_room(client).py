@@ -128,3 +128,63 @@ def client_client(info, user_info, fn): # El que pide hablar con alguien hace de
                 traceback.print_exc()
                 
         print("end server")
+def main(server_address, info):
+    print("Intentando conectarse.............")
+    with Client(address=(server_address, 6000), authkey=b'secret password server') as conn:
+        fn= sys.stdin.fileno()
+        cl = Process(target=client_listener, args=(info,conn,fn,))
+        cl.start()
+        sleep(1)
+        conn.send(info)
+        coneccted=True
+        while coneccted:
+            command = input('Introduce "getlist" si quieres saber las personas conectadas o \n"connect" si quieres iniciar una conversación \n')
+            if command =="getlist":
+                conn.send((command,0,0))
+                userlist = conn.recv()
+                print("En linea...")
+                print("Los usuarios conectados son:", userlist)
+            elif command == "connect":
+                usuario = input('¿Con quién quieres hablar? ')
+                conn.send((commad, usuario, info))
+                user_info = conn.recv()
+                if user_info == []:
+                    print("No se corresponde con ninguún usuario conectado. Pruebe de nuevo. ")
+                else:
+                    connected= False
+                    conn.close()
+                    cl.terminate()
+                    connection1 = Process(target= client_client, args = (info, user_info, fn,))
+                    conecction1.start()
+           elif command =="quit":
+                connected = False
+                conn.close()
+           elif command =="ACEPTO":
+                info_client = conn.recv()
+                connected = False
+                conn.close()
+                cl.terminate()
+                conecction2 = Process(target=nueva_conexion, args =(info_client, fn,,))
+                conecction2.start()
+          cl.terminate()
+    print("cliente cerrado")
+
+ if __name__ == '__main__':
+    server_address = '192.168.4.5'
+    client_address =  '192.168.4.6'
+    client_port =6001
+    
+    nombre = input('¿Cómo te llamas? ')
+    
+    if len(sys.argv) >1:
+        client_port = int(sys.argv[1])
+    if len(sys.argv) >2:
+        client_address = sys.argv[2]
+    if len(sys.argv) >3:
+        server.address = sys.argv[3]
+    info 0 {'nombre': nombre, 'address': client_address, 'port': client_port, 'authkey': b'secret client server'}
+    main(server_address,info)
+
+            
+            
+    
