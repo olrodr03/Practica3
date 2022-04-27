@@ -15,16 +15,16 @@ import traceback
 def send_msg_all(pid, msg, clients):
     for client, client_info in clients.items():
         print(f"enviando {msg} a {client_info}")
-        with Client(address = (client_info['address'],client_info['port']),authkey=client_info['authkey']) as conn:
+        with Client(address = (client_info['address'], client_info['port']), authkey = client_info['authkey']) as conn:
             if not client == pid:
                 conn.send((pid,msg))
             else:
                 conn.send(f"mensaje {msg} procesado")
 #
-def send_msg(info_s,info_p):
+def send_msg(info_s, info_p):
     print(f"enviando un mensaje a {info_s[0]}")
     with Client(address=(info_s[1],info_s[2]), authkey = info_s[3]) as conn:
-        conn.send((info_p,'Quieren empezar una conversación')
+        conn.send((info_p, 'Quieren empezar una conversación')
      
 #
 def get_all_clients_connected(clients): 
@@ -73,7 +73,7 @@ def main(ip_address, usuarios):
         clients = m.dict()
         
         while True:
-            print('accepting conexions')
+            print('Aceptando conexiones')
             try:
                 conn = listener.accept()
                 print('connection accepted from', listener.last_accepted)
