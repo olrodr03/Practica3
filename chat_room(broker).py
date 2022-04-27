@@ -20,16 +20,19 @@ def send_msg_all(pid, msg, clients):
                 conn.send((pid,msg))
             else:
                 conn.send(f"mensaje {msg} procesado")
+
 def send_msg(info_s,info_p):
     print(f"enviando un mensaje a {info_s[0]}")
     with Client(address=(info_s[1],info_s[2]), authkey = info_s[3]) as conn:
-        conn.send((info_p,'Quieren empezar una conversación'))
+        conn.send((info_p,'Quieren empezar una conversación')
+                                
 def get_all_clients_connected(clients): 
     all_clients_coneccted = []
     for j in clients.items():
         all_clients_connected.append(j[1]['nombre'])
     return all_clients_connected
 
+#
 def get_info(clients,usuario):
     s = []
     for i in clients.items():
@@ -83,7 +86,6 @@ def main(ip_address, usuarios):
                 send_msg_all(pid, f"Los clientes conectados son: {usuarios}", clients)
                 p = Process(target = serve_client, args = (conn, listener.last_accepted, clients, usuarios))
                 p.start()
-                
             except Exception as e:
                 traceback.print_exc()
         print('end server')
@@ -91,7 +93,6 @@ def main(ip_address, usuarios):
 if __name__ == '__main__':
     ip_address = '192.168.4.5'
     usuarios = []
-    
     if len(sys.argv) > 1:
         ip_address = sys.argv[1]
     main(ip_address, usuarios)
