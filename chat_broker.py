@@ -21,7 +21,7 @@ def send_msg_all(pid, msg, clients):
                 conn.send((pid, msg))
             else:
                 conn.send(f"mensaje '{msg}' procesado")
-
+         
 # Esta función envia un mensaje al inicio de cada conversación.
 def send_msg(info_receptor, info_emisor): 
     print(f"enviando mensaje a {info_receptor[0]}")
