@@ -148,7 +148,7 @@ def main(server_address, info):
                     conn.close()
                     cl.terminate()
                     connection1 = Process(target = connection, args = (info, info_user, fn, ))
-                    conection1.start()
+                    connection1.start()
             elif command == "salir":
                 connected = False
                 conn.close()
