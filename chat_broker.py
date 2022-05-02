@@ -92,9 +92,9 @@ def main(ip_address, users):
                 p = Process(target = serve_client, args = (conn, listener.last_accepted, clients, users))
                 p.start()
                  
-                except Exception as e:
-                    traceback.print_exc()
-                print('Chat cerrado')
+            except Exception as e:
+                traceback.print_exc()
+        print('Chat cerrado')
 
 if __name__ == '__main__':
     ip_address = '192.168.9.6'
