@@ -53,10 +53,10 @@ def serve_client(conn, pid, clients, users):
                 list_clients_connected = clients_connected(clients)
                 conn.send(list_clients_connected)
             elif msg == "chat":
-                info_receptor = get_user_info(clients, receptor) #conseguir información del receptor
+                info_receptor = get_user_info(clients, receptor) # conseguir información del receptor
                 if info_receptor != []:
-                    send_msg(info_receptor, emisor) #mandar un mensaje al receptor
-                conn.send(info_receptor) #mandar la información del receptor a quien quiere hablar con él
+                    send_msg(info_receptor, emisor) # mandar un mensaje al receptor
+                conn.send(info_receptor) # mandar la información del receptor a quien quiere hablar con él
             elif msg == "informacion del emisor":
                 conn.send(receptor)
             else:
@@ -66,7 +66,7 @@ def serve_client(conn, pid, clients, users):
             connected = False
     users.remove(clients[pid]['nombre'])
     del clients[pid]
-    send_msg_all(pid, f"informacion '{pid}' del usuario que ha entrado en el chat ", clients)
+    send_msg_all(pid, f"información '{pid}' del usuario que ha entrado en el chat ", clients)
     print(pid, 'conexión finalizada')
     send_msg_all(pid, f'Los usuarios conectados son: {users}', clients)
          
