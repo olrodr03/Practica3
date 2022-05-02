@@ -68,8 +68,59 @@ def emisor_connection(client_info, fn):
         print("**************Conexión cerrada**************")
         conn.close()
     print("**************Cerrando la conexión entre los clientes**************")
-                
+
+# Función para la persona que acepta iniciar la conversación.
 def receptor_connection(conn, fn):
+    sys.stdin = os.fdopen(fn)
+    connected = True
+    while connected:
+        try:
+            message_received = conn.recv()
+            print(message_received)
+            if message_received == 'El usuario se ha desconectado':
+                connected = False
+            elif message_received == 'archivo':
+                name_archive = conn.recv()
+                f_lines = conn.recv()
+                f = open(name_archive, 'w')
+                f.writelines(f_lines)
+                f.close()
+                print("Te han enviado este archivo: ", name_archive)
+            message_sent = input('¿Qué quieres hacer?\n Si quieres hablar, escribe tu mensaje.\n Si quieres mandar un fichero, escribe "archivo".\n Si quieres desconectarte del chat, escribe "salir"\n')
+            if message_sent == 'archivo':
+                conn.send(message_sent)
+                archive = input('Dime el nombre del archivo: ')
+                f = open(archive, 'r')
+                f_lines = f.readlines()
+                f.close()
+                conn.send(archive)
+                conn.send(f_lines)
+            elif message_sent == 'salir':
+                conn.send('El usuario se ha desconectado')
+                connected = False
+            else:
+                conn.send(message_sent)
+        except EOFError:
+            print("**************Conexión imterrumpida**************")
+            connected = False
+    print("**************Conexión cerrada**************")
+    conn.close()
+    print("**************Cerrando la conexión entre los clientes**************") # Finalizada la conversación vuelven al servidor
+
+def connection(info_emisor, info_receptor, fn):
+    print("**************Abriendo conexión entre los clientes**************")
+    with Listener(address = (info_emisor['address'], info_emisor['port']), authkey = info_emisor['authkey']) as listener:
+        print("**************Iniciando 'listener'**************")
+        while True:
+            print("**************Aceptando conexiones**************")
+            try:
+                conn = listener.accept()
+                print(info_receptor[0], "ha aceptado hablar contigo")
+                p = Process(target = receptor_connection, args = (conn, fn, ))
+                p.start()
+            except Exception as e:
+                traceback.print_exc()
+        print("**************Servidor cerrado**************")
          
 def main(server_address, info):
     print("**************Intentando conectar**************")
