@@ -140,7 +140,7 @@ def main(server_address, info):
             elif command == "chat":
                 user = input('¿Con quién quieres hablar? ')
                 conn.send((command, user, info))
-                info_user == conn.recv()
+                info_user = conn.recv()
                 if info_user == []:
                     print("Nombre incorrecto. Vuelve a intentarlo.")
                 else:
