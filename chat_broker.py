@@ -68,6 +68,7 @@ def main(ip_address, users):
                 except Exception as e:
                     traceback.print_exc()
                 print('Chat cerrado')
+
 if __name__ == '__main__':
     ip_address = '192.168.9.6'
     users = []
