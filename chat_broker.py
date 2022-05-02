@@ -22,23 +22,26 @@ def send_msg_all(pid, msg, clients):
             else:
                 conn.send(f"mensaje '{msg}' procesado")
 
-def send_msg(info_receptor,info_emisor): #Para enviar un mensaje al inicio de cada conversación
-  print(f"enviando mensaje a {info_receptor[0]}")
-  with Client(addres=(info_receptor[1],info_receptor[2]), authkey=info_receptor[3]) as conn:
-    conn.send((info_emisor, 'informacion del emisor'))
+# Esta función envia un mensaje al inicio de cada conversación.
+def send_msg(info_receptor, info_emisor): 
+    print(f"enviando mensaje a {info_receptor[0]}")
+    with Client(address = (info_receptor[1], info_receptor[2]), authkey = info_receptor[3]) as conn:
+        conn.send((info_emisor, 'informacion del emisor'))
 
-def clients_connected(clients): #Esta funcion devuelve una lista con los nombres de las personas en linea
-  list_clients_connected=[]
-  for i in clients.items():
-    list_clients_connected.append(i[1]['nombre'])
+# Esta función devuelve una lista con los nombres de las personas en línea.
+def clients_connected(clients): 
+    list_clients_connected = []
+    for i in clients.items():
+        list_clients_connected.append(i[1]['nombre'])
     return list_clients_connected
 
-def get_user_info(clients,user): #funcion que obtiene la informacion del usuario
-  info = []
-  for i in clients.items():
-    if i[1]['nombre']==user:
-      info= [user, i[1]['address'], i[1]['port'], i[1]['authkey']]
-  return info
+# Esta función obtiene la informacion de un usuario concreto.
+def get_user_info(clients, user): 
+    info = []
+    for i in clients.items():
+        if i[1]['nombre'] == user:
+            info = [user, i[1]['address'], i[1]['port'], i[1]['authkey']]
+    return info
 
 def main(ip_address, users):
     with Listener(address = (ip_address, 6000), authkey = b'secret password server') as listener:
@@ -65,3 +68,10 @@ def main(ip_address, users):
                 except Exception as e:
                     traceback.print_exc()
                 print('Chat cerrado')
+if __name__ == '__main__':
+    ip_address = '192.168.9.6'
+    users = []
+    
+    if len(sys.argv) > 1:
+         ip_address = sys.argv[1]
+    main(ip_address, users)
