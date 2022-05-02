@@ -166,7 +166,7 @@ if __name__ == '__main__':
     client_address = '' # Dirección IP del 'client'.
     client_port = 6001
               
-    nombre = input(¿Cuál es tu nombre? ')
+    nombre = input('¿Cuál es tu nombre? ')
     if len(sys.argv) > 1:
         client_port = int(sys.argv[1])
     if len(sys.argv) > 2:
