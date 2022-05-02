@@ -1,21 +1,30 @@
+"""
+PROGRAMACIÓN DISTRIBUIDA
+------------------------
+Práctica 3: Chat
+
+Autoras: Claudia Casado Poyatos
+         Natalia García Domínguez
+         Olga Rodríguez Acevedo
+"""
 
 def main(server_address, info):
-  print("**************Intentando conectar**************")
-  with Client(address=(server_address, 6000),authkey=b'secret password server') as conn:
-    fn = sys.fileno()
-    cl= Process(target=client_listener, args=(info,conn,fn,))
-    cl.start()
-    sleep(1)
-    conn.send(info)
-    connected= True
-    while connected:
-      command= input('Escribe "lista" si quieres conocer los usuarios en line o \n "chat" si quieres iniciar una conversacion \n')
-      if command == "lista":
-        conn.send((command, 0,0))
-        list_clients_connected= conn.recv()
-        print("Los usuarios conectados son: list_clients_connected)
-      elif command == "chat":
-              user= input('¿Con quien quieres hablar? ')
+    print("**************Intentando conectar**************")
+    with Client(address = (server_address, 6000), authkey = b'secret password server') as conn:
+        fn = sys.fileno()
+        cl = Process(target = client_listener, args = (info, conn, fn, ))
+        cl.start()
+        sleep(1)
+        conn.send(info)
+        connected = True
+        while connected:
+            command = input('Escribe "lista" si quieres conocer los usuarios en linea o \n "chat" si quieres iniciar una conversacion \n')
+            if command == "lista":
+                conn.send((command, 0, 0))
+                list_clients_connected = conn.recv()
+                print("Los usuarios conectados son: list_clients_connected)
+            elif command == "chat":
+                user = input('¿Con quién quieres hablar? ')
               conn.send((command,user,info))
               info_user == conn.secv()
               if info_user ==[]:
