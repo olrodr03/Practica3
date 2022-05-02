@@ -43,6 +43,34 @@ def get_user_info(clients, user):
             info = [user, i[1]['address'], i[1]['port'], i[1]['authkey']]
     return info
 
+def serve_client(conn, pid, clients, users):
+    connected = True
+    while connected:
+        try:
+            (msg, receptor, emisor) = conn.recv()
+            if msg == "lista":
+                #mandar la lista de todos los usuarios
+                list_clients_connected = clients_connected(clients)
+                conn.send(list_clients_connected)
+            elif msg == "chat":
+                info_receptor = get_user_info(clients, receptor) #conseguir información del receptor
+                if info_receptor != []:
+                    send_msg(info_receptor, emisor) #mandar un mensaje al receptor
+                conn.send(info_receptor) #mandar la información del receptor a quien quiere hablar con él
+            elif msg == "informacion del emisor":
+                conn.send(receptor)
+            else:
+                 send_msg_all(pid, msg, clients)
+        except EOFError:
+            print("conexión interrumpida")
+            connected = False
+    users.remove(clients[pid]['nombre'])
+    del clients[pid]
+    send_msg_all(pid, f"informaicon '{pid}' del usuario que ha entradp en el chat ", clients)
+    print(pid, 'conexión finalizada')
+    send_msg_all(pid, f'Los usuarios conectados son: {users}', clients)
+         
+
 def main(ip_address, users):
     with Listener(address = (ip_address, 6000), authkey = b'secret password server') as listener:
         print('comenzando "listener"')
