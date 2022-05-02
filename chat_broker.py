@@ -15,12 +15,12 @@ import traceback
 
 def send_msg_all(pid, msg, clients):
     for client, client_info in clients.items():
-      print(f"enviando: '{msg}' a {client_info}")
-      with Client(address = (client_info['address'], client_info['port']), authkey = client_info['authkey']) as conn:
-        if not client == pid:
-          conn.send((pid,msg))
-        else:
-           conn.send(f"mensaje '{msg}' procesado")
+        print(f"enviando: '{msg}' a {client_info}")
+        with Client(address = (client_info['address'], client_info['port']), authkey = client_info['authkey']) as conn:
+            if not client == pid:
+                conn.send((pid,msg))
+            else:
+                conn.send(f"mensaje '{msg}' procesado")
 
 def send_msg(info_receptor,info_emisor): #Para enviar un mensae al inicio de cada conversacion
   print(f"enviando mensaje a {info_receptor[0]}")
