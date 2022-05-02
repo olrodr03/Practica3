@@ -22,7 +22,7 @@ def client_listener(info, conexion, fn):
         print("**************Aceptando conexiones desde", cl.last_accepted)
         m = conn.recv()
         print("**************mensaje recibido:", m)
-        if m[1] == 'información del emisor': 
+        if m[1] == 'informacion del emisor': 
             #debemos cerrar la conexión entre el cliente que recibe este mensaje y el servidor
             print('Este usuario quiere entablar una conversación')
             conexion.send(("información del emisor", m[0], 0))
