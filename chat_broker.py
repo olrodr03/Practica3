@@ -18,7 +18,7 @@ def send_msg_all(pid, msg, clients):
         print(f"enviando: '{msg}' a {client_info}")
         with Client(address = (client_info['address'], client_info['port']), authkey = client_info['authkey']) as conn:
             if not client == pid:
-                conn.send((pid,msg))
+                conn.send((pid, msg))
             else:
                 conn.send(f"mensaje '{msg}' procesado")
 
@@ -66,11 +66,10 @@ def serve_client(conn, pid, clients, users):
             connected = False
     users.remove(clients[pid]['nombre'])
     del clients[pid]
-    send_msg_all(pid, f"informaicon '{pid}' del usuario que ha entradp en el chat ", clients)
+    send_msg_all(pid, f"informacion '{pid}' del usuario que ha entrado en el chat ", clients)
     print(pid, 'conexión finalizada')
     send_msg_all(pid, f'Los usuarios conectados son: {users}', clients)
          
-
 def main(ip_address, users):
     with Listener(address = (ip_address, 6000), authkey = b'secret password server') as listener:
         print('comenzando "listener"')
