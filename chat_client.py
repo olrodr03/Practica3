@@ -7,7 +7,69 @@ Autoras: Claudia Casado Poyatos
          Natalia García Domínguez
          Olga Rodríguez Acevedo
 """
+from multiprocessing.connection import Client, Listener
+from time import sleep
+from multiprocessing import Process
+import sys, os
+import traceback
 
+def client_listener(info, conexion, fn):
+    print(f"**************Abriendo 'listener' desde {info}**************")
+    cl = Listener(address=(info['address'], info['port']), authkey=info['authkey'])
+    print("**************Iniciando 'listener'**************")
+    while True:
+        conn = cl.accept()
+        print("**************Aceptando conexiones desde", cl.last_accepted)
+        m = conn.recv()
+        print("**************mensaje recibido:", m)
+        if m[1] == 'información del emisor': 
+            #debemos cerrar la conexión entre el cliente que recibe este mensaje y el servidor
+            print('Este ususario quiere entablar una conversación')
+            conexion.send(("información, del emisor", m[0],0))
+            print('Escribe "ACEPTO" si quieres iniciarla. Saluda para avisar de que estás en el chat')
+         
+def emisor_connection(client_info, fn): #función para la persona que quiere iniciar
+    print("**************Intentando conectar**************")
+    sys.stdin = os.fdopen(fn)
+    with Client(address=(client_info['address'], client_info['port']), authkey=client_info['authkey']) as conn: #Información del emisor
+        
+        sleep(1)
+        print("**************Aceptando conexiones**************")
+        connected = True
+        while connected:
+        
+            message_sent = input('¿Qué quieres hacer?\n Si quieres hablar, escribe tu mensaje.\n Si quieres mandar un fichero, escribe "archivo".\n Si quieres desconectarte del chat escribe "salir"\n')
+            
+            if message_sent == 'archivo':
+                conn.send(message_sent)
+                
+                archive = input('Dime el nombre del archivo: ')
+                f = open(archive, 'r')
+                f_line = f.readlines()
+                f.close()
+                conn.send(archive)
+                conn.send(f_lines)
+            elif:
+                conn.send('El usuario se ha desconectado')
+                connected = False
+            else:
+                conn.send(message_sent)
+            message_received = conn.recv()
+            print(message_received)
+            if message_received == 'El ususario se ha desconectado':
+                connected = False
+            elif message_received == 'archivo':
+                name_archive = conn.recv()
+                f_lines = conn.recv()
+                f = open(name_archive, 'w')
+                f.writelines(f_lines)
+                f.close()
+                print("Te han enviado este archivo: ", name_archive)
+         print("**************Conexión cerrada**************")
+         conn.close()
+         print("**************Cerrando la conexión entre los clientes**************")
+                
+                
 def main(server_address, info):
     print("**************Intentando conectar**************")
     with Client(address = (server_address, 6000), authkey = b'secret password server') as conn:
